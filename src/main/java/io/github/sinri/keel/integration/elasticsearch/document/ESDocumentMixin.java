@@ -4,22 +4,27 @@ import io.github.sinri.keel.integration.elasticsearch.ESApiMixin;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * ElasticSearch API 的文档读写能力相关的 Mixin。
+ *
+ * @since 5.0.0
+ */
 public interface ESDocumentMixin extends ESApiMixin {
     default Future<ESDocumentCreateResponse> documentCreate(String indexName, @Nullable String documentId, @Nullable ESApiQueries queries, JsonObject documentBody) {
         return Future.succeededFuture()
-                .compose(v -> {
-                    if (documentId == null) {
-                        return callPost("/" + indexName + "/_doc/", queries, documentBody);
-                    } else {
-                        return callPost("/" + indexName + "/_create/" + documentId, queries, documentBody);
-                    }
-                })
-                .compose(resp -> Future.succeededFuture(new ESDocumentCreateResponse(resp)));
+                     .compose(v -> {
+                         if (documentId == null) {
+                             return callPost("/" + indexName + "/_doc/", queries, documentBody);
+                         } else {
+                             return callPost("/" + indexName + "/_create/" + documentId, queries, documentBody);
+                         }
+                     })
+                     .compose(resp -> Future.succeededFuture(new ESDocumentCreateResponse(resp)));
     }
 
     /**
@@ -52,9 +57,8 @@ public interface ESDocumentMixin extends ESApiMixin {
      *
      * @param target (Optional, string) Name of the data stream, index, or index alias to perform bulk actions on.
      * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html">Bulk API</a>
-     * @since 3.1.10
      */
-    default Future<ESDocumentBulkResponse> documentBulk(@Nullable String target, @Nullable ESApiQueries queries, @Nonnull List<JsonObject> requestBody) {
+    default Future<ESDocumentBulkResponse> documentBulk(@Nullable String target, @Nullable ESApiQueries queries, @NotNull List<JsonObject> requestBody) {
         // POST /_bulk
         // POST /<target>/_bulk
         String endpoint = "/_bulk";

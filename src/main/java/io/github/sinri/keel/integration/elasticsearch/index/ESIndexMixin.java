@@ -9,12 +9,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
- * @since 3.0.7
+ * ElasticSearch API 的索引调用能力相关的 Mixin。
+ * @since 5.0.0
  */
 public interface ESIndexMixin extends ESApiMixin {
     /**
      * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html#indices-create-api-path-params">Create Index - Path Parameters - Index Name</a>
-     * @since 3.2.20
      */
     static boolean isLegalIndexName(String indexName) {
         if (indexName == null) {
