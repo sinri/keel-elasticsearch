@@ -15,7 +15,8 @@ import java.util.List;
  * @since 5.0.0
  */
 public interface ESDocumentMixin extends ESApiMixin {
-    default Future<ESDocumentCreateResponse> documentCreate(String indexName, @Nullable String documentId, @Nullable ESApiQueries queries, JsonObject documentBody) {
+    @NotNull
+    default Future<ESDocumentCreateResponse> documentCreate(@NotNull String indexName, @Nullable String documentId, @Nullable ESApiQueries queries, @NotNull JsonObject documentBody) {
         return Future.succeededFuture()
                      .compose(v -> {
                          if (documentId == null) {
@@ -30,7 +31,8 @@ public interface ESDocumentMixin extends ESApiMixin {
     /**
      * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html">Get API</a>
      */
-    default Future<ESDocumentGetResponse> documentGet(String indexName, String documentId, @Nullable ESApiQueries queries) {
+    @NotNull
+    default Future<ESDocumentGetResponse> documentGet(@NotNull String indexName, @NotNull String documentId, @Nullable ESApiQueries queries) {
         return call(HttpMethod.GET, "/" + indexName + "/_doc/" + documentId, queries, null)
                 .compose(resp -> Future.succeededFuture(new ESDocumentGetResponse(resp)));
     }
@@ -38,7 +40,8 @@ public interface ESDocumentMixin extends ESApiMixin {
     /**
      * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html">Delete API</a>
      */
-    default Future<ESDocumentDeleteResponse> documentDelete(String indexName, String documentId, @Nullable ESApiQueries queries) {
+    @NotNull
+    default Future<ESDocumentDeleteResponse> documentDelete(@NotNull String indexName, @NotNull String documentId, @Nullable ESApiQueries queries) {
         return call(HttpMethod.DELETE, "/" + indexName + "/_doc/" + documentId, queries, null)
                 .compose(resp -> Future.succeededFuture(new ESDocumentDeleteResponse(resp)));
     }
@@ -46,7 +49,8 @@ public interface ESDocumentMixin extends ESApiMixin {
     /**
      * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html">Update API</a>
      */
-    default Future<ESDocumentUpdateResponse> documentUpdate(String indexName, String documentId, @Nullable ESApiQueries queries, JsonObject requestBody) {
+    @NotNull
+    default Future<ESDocumentUpdateResponse> documentUpdate(@NotNull String indexName, @NotNull String documentId, @Nullable ESApiQueries queries, @NotNull JsonObject requestBody) {
         return callPost("/" + indexName + "/_update/" + documentId, queries, requestBody)
                 .compose(resp -> Future.succeededFuture(new ESDocumentUpdateResponse(resp)));
     }
@@ -58,6 +62,7 @@ public interface ESDocumentMixin extends ESApiMixin {
      * @param target (Optional, string) Name of the data stream, index, or index alias to perform bulk actions on.
      * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html">Bulk API</a>
      */
+    @NotNull
     default Future<ESDocumentBulkResponse> documentBulk(@Nullable String target, @Nullable ESApiQueries queries, @NotNull List<JsonObject> requestBody) {
         // POST /_bulk
         // POST /<target>/_bulk

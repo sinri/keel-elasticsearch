@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 5.0.0
  */
 public class ElasticSearchKit implements ESIndexMixin {
+    @NotNull
     private final ElasticSearchConfig esConfig;
 
     public ElasticSearchKit(@NotNull String esKey) {
@@ -23,7 +24,7 @@ public class ElasticSearchKit implements ESIndexMixin {
         this.esConfig = esConfig;
     }
 
-    public ElasticSearchConfig getEsConfig() {
+    public @NotNull ElasticSearchConfig getEsConfig() {
         return esConfig;
     }
 }

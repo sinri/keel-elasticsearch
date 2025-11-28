@@ -1,5 +1,6 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
+import io.github.sinri.keel.base.configuration.ConfigTree;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -25,6 +26,7 @@ import static io.github.sinri.keel.base.KeelInstance.Keel;
  */
 public interface ESApiMixin {
 
+    @NotNull
     ElasticSearchConfig getEsConfig();
 
     /**
@@ -54,9 +56,15 @@ public interface ESApiMixin {
      * @param requestBody 字符串形式请求报文
      * @return 异步完成的请求返回报文解析得的 JSON 对象
      */
+    @NotNull
     default Future<JsonObject> call(@NotNull HttpMethod httpMethod, @NotNull String endpoint, @Nullable ESApiQueries queries, @Nullable String requestBody) {
         WebClient webClient = WebClient.create(Keel.getVertx());
-        String url = this.getEsConfig().clusterApiUrl(endpoint);
+        String url = null;
+        try {
+            url = this.getEsConfig().clusterApiUrl(endpoint);
+        } catch (ConfigTree.NotConfiguredException e) {
+            return Future.failedFuture(e);
+        }
         HttpRequest<Buffer> bufferHttpRequest = webClient.requestAbs(httpMethod, url);
 
         bufferHttpRequest.basicAuthentication(getEsConfig().username(), getEsConfig().password());
@@ -111,6 +119,7 @@ public interface ESApiMixin {
      * @param requestBody JSON 对象形式的报文内容
      * @return 异步完成的请求返回报文解析得的 JSON 对象
      */
+    @NotNull
     default Future<JsonObject> callPost(@NotNull String endpoint, @Nullable ESApiQueries queries, @NotNull JsonObject requestBody) {
         return call(HttpMethod.POST, endpoint, queries, requestBody.toString());
     }
@@ -119,6 +128,7 @@ public interface ESApiMixin {
      * 在 URL 上的请求内容
      */
     class ESApiQueries extends HashMap<String, String> {
+        @NotNull
         public JsonObject toJsonObject() {
             JsonObject jsonObject = new JsonObject();
             this.forEach(jsonObject::put);
