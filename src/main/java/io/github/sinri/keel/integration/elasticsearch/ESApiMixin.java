@@ -1,5 +1,6 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
+import io.github.sinri.keel.base.Keel;
 import io.github.sinri.keel.base.configuration.ConfigTree;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
@@ -16,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.sinri.keel.base.KeelInstance.Keel;
-
 
 /**
  * ElasticSearch API 的调用能力相关的 Mixin，适用于8.9版。
@@ -25,6 +24,9 @@ import static io.github.sinri.keel.base.KeelInstance.Keel;
  * @since 5.0.0
  */
 public interface ESApiMixin {
+
+    @NotNull
+    Keel getKeel();
 
     @NotNull
     ElasticSearchConfig getEsConfig();
@@ -58,7 +60,7 @@ public interface ESApiMixin {
      */
     @NotNull
     default Future<JsonObject> call(@NotNull HttpMethod httpMethod, @NotNull String endpoint, @Nullable ESApiQueries queries, @Nullable String requestBody) {
-        WebClient webClient = WebClient.create(Keel.getVertx());
+        WebClient webClient = WebClient.create(getKeel().getVertx());
         String url = null;
         try {
             url = this.getEsConfig().clusterApiUrl(endpoint);

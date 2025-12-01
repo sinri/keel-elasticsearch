@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.sinri.keel.base.KeelInstance.Keel;
-
 
 /**
  * ElasticSearch API 的调用配置，针对一个特定的服务。
@@ -22,10 +20,6 @@ public class ElasticSearchConfig extends ConfigTree {
 
     public ElasticSearchConfig(@NotNull ConfigElement configuration) {
         super(configuration);
-    }
-
-    public ElasticSearchConfig(@NotNull String esKey) {
-        this(Objects.requireNonNull(Keel.getConfiguration().extract("es", esKey)));
     }
 
     @Nullable

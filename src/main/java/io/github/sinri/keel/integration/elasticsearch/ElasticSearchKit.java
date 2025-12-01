@@ -1,5 +1,6 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
+import io.github.sinri.keel.base.Keel;
 import io.github.sinri.keel.integration.elasticsearch.index.ESIndexMixin;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,13 +16,17 @@ import org.jetbrains.annotations.NotNull;
 public class ElasticSearchKit implements ESIndexMixin {
     @NotNull
     private final ElasticSearchConfig esConfig;
+    @NotNull
+    private final Keel keel;
 
-    public ElasticSearchKit(@NotNull String esKey) {
-        this(new ElasticSearchConfig(esKey));
+    public ElasticSearchKit(@NotNull Keel keel, @NotNull ElasticSearchConfig esConfig) {
+        this.esConfig = esConfig;
+        this.keel = keel;
     }
 
-    public ElasticSearchKit(@NotNull ElasticSearchConfig esConfig) {
-        this.esConfig = esConfig;
+    @Override
+    public @NotNull Keel getKeel() {
+        return keel;
     }
 
     public @NotNull ElasticSearchConfig getEsConfig() {
