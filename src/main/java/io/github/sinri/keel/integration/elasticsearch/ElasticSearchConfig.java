@@ -2,7 +2,7 @@ package io.github.sinri.keel.integration.elasticsearch;
 
 
 import io.github.sinri.keel.base.configuration.ConfigElement;
-import io.github.sinri.keel.base.configuration.ConfigTree;
+import io.github.sinri.keel.base.configuration.NotConfiguredException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +16,7 @@ import java.util.Objects;
  *
  * @since 5.0.0
  */
-public class ElasticSearchConfig extends ConfigTree {
+public class ElasticSearchConfig extends ConfigElement {
 
     public ElasticSearchConfig(@NotNull ConfigElement configuration) {
         super(configuration);

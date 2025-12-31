@@ -1,7 +1,7 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
 import io.github.sinri.keel.base.Keel;
-import io.github.sinri.keel.base.configuration.ConfigTree;
+import io.github.sinri.keel.base.configuration.NotConfiguredException;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -64,7 +64,7 @@ public interface ESApiMixin {
         String url = null;
         try {
             url = this.getEsConfig().clusterApiUrl(endpoint);
-        } catch (ConfigTree.NotConfiguredException e) {
+        } catch (NotConfiguredException e) {
             return Future.failedFuture(e);
         }
         HttpRequest<Buffer> bufferHttpRequest = webClient.requestAbs(httpMethod, url);
