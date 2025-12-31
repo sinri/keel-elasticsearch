@@ -45,7 +45,7 @@ dependencies {
     api("io.github.sinri:keel-core:$keelCoreVersion")
 
     // Vert.x dependencies (from module-info.java)
-    api("io.vertx:vertx-web-client:$vertxVersion")
+    // api("io.vertx:vertx-web-client:$vertxVersion")
 
     // Annotations (static in module-info.java)
     api("org.jetbrains:annotations")
