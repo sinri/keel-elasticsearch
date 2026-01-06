@@ -1,6 +1,6 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
-import io.github.sinri.keel.base.Keel;
+import io.github.sinri.keel.base.VertxHolder;
 import io.github.sinri.keel.base.configuration.NotConfiguredException;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
@@ -10,8 +10,8 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +23,11 @@ import java.util.Objects;
  *
  * @since 5.0.0
  */
-public interface ESApiMixin {
+@NullMarked
+public interface ESApiMixin extends VertxHolder {
 
-    @NotNull
-    Keel getKeel();
+    // Keel getKeel();
 
-    @NotNull
     ElasticSearchConfig getEsConfig();
 
     /**
@@ -36,7 +35,7 @@ public interface ESApiMixin {
      *
      * @param bufferHttpRequest 请求体
      */
-    default void handleHeaders(@NotNull HttpRequest<Buffer> bufferHttpRequest) {
+    default void handleHeaders(HttpRequest<Buffer> bufferHttpRequest) {
         List<Integer> version = getEsConfig().version();
         if (version != null && !version.isEmpty() && version.get(0) != null && version.get(0) < 8) {
             bufferHttpRequest.putHeader("Accept", "application/json");
@@ -58,9 +57,9 @@ public interface ESApiMixin {
      * @param requestBody 字符串形式请求报文
      * @return 异步完成的请求返回报文解析得的 JSON 对象
      */
-    @NotNull
-    default Future<JsonObject> call(@NotNull HttpMethod httpMethod, @NotNull String endpoint, @Nullable ESApiQueries queries, @Nullable String requestBody) {
-        WebClient webClient = WebClient.create(getKeel().getVertx());
+
+    default Future<JsonObject> call(HttpMethod httpMethod, String endpoint, @Nullable ESApiQueries queries, @Nullable String requestBody) {
+        WebClient webClient = WebClient.create(getVertx());
         String url = null;
         try {
             url = this.getEsConfig().clusterApiUrl(endpoint);
@@ -121,8 +120,8 @@ public interface ESApiMixin {
      * @param requestBody JSON 对象形式的报文内容
      * @return 异步完成的请求返回报文解析得的 JSON 对象
      */
-    @NotNull
-    default Future<JsonObject> callPost(@NotNull String endpoint, @Nullable ESApiQueries queries, @NotNull JsonObject requestBody) {
+
+    default Future<JsonObject> callPost(String endpoint, @Nullable ESApiQueries queries, JsonObject requestBody) {
         return call(HttpMethod.POST, endpoint, queries, requestBody.toString());
     }
 
@@ -130,7 +129,7 @@ public interface ESApiMixin {
      * 在 URL 上的请求内容
      */
     class ESApiQueries extends HashMap<String, String> {
-        @NotNull
+
         public JsonObject toJsonObject() {
             JsonObject jsonObject = new JsonObject();
             this.forEach(jsonObject::put);
@@ -145,15 +144,15 @@ public interface ESApiMixin {
         private final int statusCode;
         private final @Nullable String response;
 
-        private final @NotNull HttpMethod httpMethod;
-        private final @NotNull String endpoint;
+        private final HttpMethod httpMethod;
+        private final String endpoint;
         private final @Nullable ESApiQueries queries;
         private final @Nullable String requestBody;
 
         public ESApiException(
                 int statusCode, @Nullable String response,
-                @NotNull HttpMethod httpMethod,
-                @NotNull String endpoint,
+                HttpMethod httpMethod,
+                String endpoint,
                 @Nullable ESApiQueries queries,
                 @Nullable String requestBody
         ) {
@@ -187,7 +186,7 @@ public interface ESApiMixin {
             return response;
         }
 
-        @NotNull
+
         public String getEndpoint() {
             return endpoint;
         }
@@ -197,7 +196,7 @@ public interface ESApiMixin {
             return queries;
         }
 
-        @NotNull
+
         public HttpMethod getHttpMethod() {
             return httpMethod;
         }

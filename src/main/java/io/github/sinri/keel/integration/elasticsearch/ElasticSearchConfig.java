@@ -3,8 +3,8 @@ package io.github.sinri.keel.integration.elasticsearch;
 
 import io.github.sinri.keel.base.configuration.ConfigElement;
 import io.github.sinri.keel.base.configuration.NotConfiguredException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +16,15 @@ import java.util.Objects;
  *
  * @since 5.0.0
  */
+@NullMarked
 public class ElasticSearchConfig extends ConfigElement {
 
-    public ElasticSearchConfig(@NotNull ConfigElement configuration) {
+    public ElasticSearchConfig(ConfigElement configuration) {
         super(configuration);
     }
 
-    @Nullable
-    public String username() {
+
+    public @Nullable String username() {
         try {
             return readString(List.of("username"));
         } catch (NotConfiguredException e) {
@@ -31,8 +32,8 @@ public class ElasticSearchConfig extends ConfigElement {
         }
     }
 
-    @Nullable
-    public String password() {
+
+    public @Nullable String password() {
         try {
             return readString(List.of("password"));
         } catch (NotConfiguredException e) {
@@ -40,7 +41,7 @@ public class ElasticSearchConfig extends ConfigElement {
         }
     }
 
-    public @NotNull String clusterHost() throws NotConfiguredException {
+    public String clusterHost() throws NotConfiguredException {
         return readString(List.of("cluster", "host"));
     }
 
@@ -52,7 +53,7 @@ public class ElasticSearchConfig extends ConfigElement {
         }
     }
 
-    public @NotNull String clusterScheme() {
+    public String clusterScheme() {
         try {
             return Objects.requireNonNull(readString(List.of("cluster", "scheme")));
         } catch (NotConfiguredException e) {
@@ -60,7 +61,7 @@ public class ElasticSearchConfig extends ConfigElement {
         }
     }
 
-    public @NotNull String clusterApiUrl(@NotNull String endpoint) throws NotConfiguredException {
+    public String clusterApiUrl(String endpoint) throws NotConfiguredException {
         return this.clusterScheme() + "://" + this.clusterHost() + ":" + this.clusterPort() + endpoint;
     }
 

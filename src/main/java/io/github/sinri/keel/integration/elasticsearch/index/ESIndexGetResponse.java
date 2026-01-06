@@ -2,6 +2,7 @@ package io.github.sinri.keel.integration.elasticsearch.index;
 
 import io.github.sinri.keel.base.json.UnmodifiableJsonifiableEntityImpl;
 import io.vertx.core.json.JsonObject;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 /**
  * @since 5.0.0
  */
+@NullMarked
 public class ESIndexGetResponse extends UnmodifiableJsonifiableEntityImpl {
     public ESIndexGetResponse(JsonObject jsonObject) {
         super(jsonObject);

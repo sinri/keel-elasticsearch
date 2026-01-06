@@ -1,8 +1,8 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
-import io.github.sinri.keel.base.Keel;
 import io.github.sinri.keel.integration.elasticsearch.index.ESIndexMixin;
-import org.jetbrains.annotations.NotNull;
+import io.vertx.core.Vertx;
+import org.jspecify.annotations.NullMarked;
 
 
 /**
@@ -13,23 +13,24 @@ import org.jetbrains.annotations.NotNull;
  *         </a> Here only JSON over HTTP(s) supported.
  * @since 5.0.0
  */
+@NullMarked
 public class ElasticSearchKit implements ESIndexMixin {
-    @NotNull
-    private final ElasticSearchConfig esConfig;
-    @NotNull
-    private final Keel keel;
 
-    public ElasticSearchKit(@NotNull Keel keel, @NotNull ElasticSearchConfig esConfig) {
+    private final ElasticSearchConfig esConfig;
+
+    private final Vertx vertx;
+
+    public ElasticSearchKit(Vertx vertx, ElasticSearchConfig esConfig) {
         this.esConfig = esConfig;
-        this.keel = keel;
+        this.vertx = vertx;
+    }
+
+    public ElasticSearchConfig getEsConfig() {
+        return esConfig;
     }
 
     @Override
-    public @NotNull Keel getKeel() {
-        return keel;
-    }
-
-    public @NotNull ElasticSearchConfig getEsConfig() {
-        return esConfig;
+    public Vertx getVertx() {
+        return vertx;
     }
 }

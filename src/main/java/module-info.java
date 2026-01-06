@@ -2,7 +2,7 @@ module io.github.sinri.keel.integration.elasticsearch {
     requires transitive io.github.sinri.keel.base;
     requires transitive io.vertx.core;
     requires transitive io.vertx.web.client;
-    requires static org.jetbrains.annotations;
+    requires static org.jspecify;
 
     exports io.github.sinri.keel.integration.elasticsearch;
     exports io.github.sinri.keel.integration.elasticsearch.document;
