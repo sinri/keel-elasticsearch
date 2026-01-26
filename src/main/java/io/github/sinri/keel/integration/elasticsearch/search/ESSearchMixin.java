@@ -1,6 +1,7 @@
 package io.github.sinri.keel.integration.elasticsearch.search;
 
 import io.github.sinri.keel.integration.elasticsearch.ESApiMixin;
+import io.github.sinri.keel.integration.elasticsearch.ESApiQueries;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import org.jspecify.annotations.NullMarked;

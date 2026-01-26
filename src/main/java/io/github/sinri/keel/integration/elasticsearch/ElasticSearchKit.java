@@ -1,7 +1,7 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
+import io.github.sinri.keel.base.async.Keel;
 import io.github.sinri.keel.integration.elasticsearch.index.ESIndexMixin;
-import io.vertx.core.Vertx;
 import org.jspecify.annotations.NullMarked;
 
 
@@ -18,11 +18,11 @@ public class ElasticSearchKit implements ESIndexMixin {
 
     private final ElasticSearchConfig esConfig;
 
-    private final Vertx vertx;
+    private final Keel keel;
 
-    public ElasticSearchKit(Vertx vertx, ElasticSearchConfig esConfig) {
+    public ElasticSearchKit(Keel keel, ElasticSearchConfig esConfig) {
         this.esConfig = esConfig;
-        this.vertx = vertx;
+        this.keel = keel;
     }
 
     public ElasticSearchConfig getEsConfig() {
@@ -30,7 +30,7 @@ public class ElasticSearchKit implements ESIndexMixin {
     }
 
     @Override
-    public Vertx getVertx() {
-        return vertx;
+    public Keel getKeel() {
+        return keel;
     }
 }

@@ -1,6 +1,6 @@
 package io.github.sinri.keel.integration.elasticsearch;
 
-import io.github.sinri.keel.base.VertxHolder;
+import io.github.sinri.keel.base.async.Keel;
 import io.github.sinri.keel.base.configuration.NotConfiguredException;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
@@ -13,7 +13,6 @@ import io.vertx.ext.web.client.WebClient;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,9 +23,9 @@ import java.util.Objects;
  * @since 5.0.0
  */
 @NullMarked
-public interface ESApiMixin extends VertxHolder {
+public interface ESApiMixin {
 
-    // Keel getKeel();
+    Keel getKeel();
 
     ElasticSearchConfig getEsConfig();
 
@@ -37,7 +36,7 @@ public interface ESApiMixin extends VertxHolder {
      */
     default void handleHeaders(HttpRequest<Buffer> bufferHttpRequest) {
         List<Integer> version = getEsConfig().version();
-        if (version != null && !version.isEmpty() && version.get(0) != null && version.get(0) < 8) {
+        if (version != null && !version.isEmpty() && version.get(0) < 8) {
             bufferHttpRequest.putHeader("Accept", "application/json");
             bufferHttpRequest.putHeader("Content-Type", "application/json");
         } else {
@@ -57,9 +56,8 @@ public interface ESApiMixin extends VertxHolder {
      * @param requestBody 字符串形式请求报文
      * @return 异步完成的请求返回报文解析得的 JSON 对象
      */
-
     default Future<JsonObject> call(HttpMethod httpMethod, String endpoint, @Nullable ESApiQueries queries, @Nullable String requestBody) {
-        WebClient webClient = WebClient.create(getVertx());
+        WebClient webClient = WebClient.create(getKeel());
         String url = null;
         try {
             url = this.getEsConfig().clusterApiUrl(endpoint);
@@ -125,85 +123,4 @@ public interface ESApiMixin extends VertxHolder {
         return call(HttpMethod.POST, endpoint, queries, requestBody.toString());
     }
 
-    /**
-     * 在 URL 上的请求内容
-     */
-    class ESApiQueries extends HashMap<String, String> {
-
-        public JsonObject toJsonObject() {
-            JsonObject jsonObject = new JsonObject();
-            this.forEach(jsonObject::put);
-            return jsonObject;
-        }
-    }
-
-    /**
-     * ElasticSearch API 服务请求异常。
-     */
-    class ESApiException extends Exception {
-        private final int statusCode;
-        private final @Nullable String response;
-
-        private final HttpMethod httpMethod;
-        private final String endpoint;
-        private final @Nullable ESApiQueries queries;
-        private final @Nullable String requestBody;
-
-        public ESApiException(
-                int statusCode, @Nullable String response,
-                HttpMethod httpMethod,
-                String endpoint,
-                @Nullable ESApiQueries queries,
-                @Nullable String requestBody
-        ) {
-            this.statusCode = statusCode;
-            this.response = response;
-
-            this.httpMethod = httpMethod;
-            this.endpoint = endpoint;
-            this.queries = queries;
-            this.requestBody = requestBody;
-        }
-
-        @Override
-        public String toString() {
-            return new JsonObject()
-                    .put("status_code", statusCode)
-                    .put("response", response)
-                    .put("http_method", httpMethod.name())
-                    .put("endpoint", endpoint)
-                    .put("queries", (queries == null ? null : queries.toJsonObject()))
-                    .put("request_body", requestBody)
-                    .toString();
-        }
-
-        public int getStatusCode() {
-            return statusCode;
-        }
-
-        @Nullable
-        public String getResponse() {
-            return response;
-        }
-
-
-        public String getEndpoint() {
-            return endpoint;
-        }
-
-        @Nullable
-        public ESApiQueries getQueries() {
-            return queries;
-        }
-
-
-        public HttpMethod getHttpMethod() {
-            return httpMethod;
-        }
-
-        @Nullable
-        public String getRequestBody() {
-            return requestBody;
-        }
-    }
 }
