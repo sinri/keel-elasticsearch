@@ -6,7 +6,9 @@ description: Keel Elasticsearch 集成库文档 — Keel 与 Vert.x 上的 Elast
 url: https://sinri.github.io
 baseurl: /keel-elasticsearch
 
-theme: jekyll-theme-merlot
+remote_theme: pages-themes/merlot@master
+plugins:
+  - jekyll-remote-theme
 
 markdown: kramdown
 kramdown:
