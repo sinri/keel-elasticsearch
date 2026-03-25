@@ -1,5 +1,6 @@
 ---
 title: Keel Elasticsearch 5.0.1 使用指南
+description: keel-elasticsearch 5.0.1 依赖、配置、ElasticSearchKit API 与错误处理说明
 ---
 
 # Keel Elasticsearch 5.0.1 使用指南

@@ -1,0 +1,26 @@
+# 与 .github/workflows/jekyll-gh-pages.yml 一致：source 为 ./docs/，由 actions/jekyll-build-pages 构建
+# 仅使用 GitHub Pages 允许的内置主题与默认插件，勿添加未白名单的 gems
+
+title: Keel Elasticsearch
+description: Keel Elasticsearch 集成库文档 — Keel 与 Vert.x 上的 Elasticsearch REST API 轻量封装
+url: https://sinri.github.io
+baseurl: /keel-elasticsearch
+
+theme: jekyll-theme-merlot
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Merlot：在页眉展示从仓库打包下载（依赖构建环境中的 site.github 元数据）
+show_downloads: true
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+exclude:
+  - README.md
