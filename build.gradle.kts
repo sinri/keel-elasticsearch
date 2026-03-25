@@ -2,7 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
     signing
-    id("org.jreleaser") version "1.22.0"
+    id("org.jreleaser") version "1.23.0"
 }
 
 // Project metadata from gradle.properties
@@ -25,7 +25,6 @@ val sonatypePassword: String by project
 
 // Dependency versions
 val jspecifyVersion: String by project
-val vertxVersion: String by project
 val keelCoreVersion: String by project
 val keelTestVersion: String by project
 

@@ -25,6 +25,7 @@ public class ESApiException extends Exception {
             @Nullable ESApiQueries queries,
             @Nullable String requestBody
     ) {
+        super("ES API Error: " + httpMethod.name() + " " + endpoint + " returned " + statusCode);
         this.statusCode = statusCode;
         this.response = response;
 

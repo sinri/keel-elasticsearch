@@ -85,8 +85,11 @@ public class ElasticSearchConfig extends ConfigElement {
         }
         List<Integer> l = new ArrayList<>();
         for (var c : x.split("[.]")) {
-            int i = Integer.parseInt(c.trim());
-            l.add(i);
+            try {
+                l.add(Integer.parseInt(c.trim()));
+            } catch (NumberFormatException e) {
+                break;
+            }
         }
         return l;
     }

@@ -45,6 +45,8 @@ public interface ESApiMixin {
         }
     }
 
+    WebClient sharedWebClient();
+
     /**
      * 向 ElasticSearch 服务发起请求。
      * <p>
@@ -57,7 +59,7 @@ public interface ESApiMixin {
      * @return 异步完成的请求返回报文解析得的 JSON 对象
      */
     default Future<JsonObject> call(HttpMethod httpMethod, String endpoint, @Nullable ESApiQueries queries, @Nullable String requestBody) {
-        WebClient webClient = WebClient.create(getKeel());
+        WebClient webClient = sharedWebClient();
         String url = null;
         try {
             url = this.getEsConfig().clusterApiUrl(endpoint);
@@ -66,7 +68,11 @@ public interface ESApiMixin {
         }
         HttpRequest<Buffer> bufferHttpRequest = webClient.requestAbs(httpMethod, url);
 
-        bufferHttpRequest.basicAuthentication(getEsConfig().username(), getEsConfig().password());
+        String username = getEsConfig().username();
+        String password = getEsConfig().password();
+        if (username != null && password != null) {
+            bufferHttpRequest.basicAuthentication(username, password);
+        }
         handleHeaders(bufferHttpRequest);
 
         String opaqueId = this.getEsConfig().opaqueId();
@@ -98,16 +104,20 @@ public interface ESApiMixin {
                              ));
                          }
                          JsonObject resp;
+                         // 先按照 JsonObject 解析，如果失败则尝试 JsonArray，最终 fallback 为原始字符串
                          try {
                              resp = bufferHttpResponse.bodyAsJsonObject();
                          } catch (DecodeException decodeException) {
-                             // There are situations that use Json Array as the response body!
-                             resp = new JsonObject()
-                                     .put("array", new JsonArray(bufferHttpResponse.bodyAsString()));
+                             try {
+                                 resp = new JsonObject()
+                                         .put("array", new JsonArray(bufferHttpResponse.bodyAsString()));
+                             } catch (DecodeException decodeException2) {
+                                 resp = new JsonObject()
+                                         .put("raw", bufferHttpResponse.bodyAsString());
+                             }
                          }
                          return Future.succeededFuture(resp);
-                     })
-                     .andThen(ar -> webClient.close());
+                     });
     }
 
     /**
